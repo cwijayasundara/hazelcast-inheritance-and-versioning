@@ -11,8 +11,15 @@ public class IrsTrade extends TradeParent implements Serializable, VersionedPort
 
     private String tradeName;
     private int tradeAmount;
-
     private static final int classVersionId=1;
+
+    @Override
+    public String toString() {
+        return "IrsTrade{" +
+                "tradeName='" + tradeName + '\'' +
+                ", tradeAmount=" + tradeAmount +
+                '}';
+    }
 
     public IrsTrade(){}
 
@@ -38,13 +45,6 @@ public class IrsTrade extends TradeParent implements Serializable, VersionedPort
         this.tradeAmount = tradeAmount;
     }
 
-    @Override
-    public String toString() {
-        return "IrsTrade{" +
-                "tradeName='" + tradeName + '\'' +
-                ", tradeAmount=" + tradeAmount +
-                '}';
-    }
 
     @Override
     public int getClassId() {

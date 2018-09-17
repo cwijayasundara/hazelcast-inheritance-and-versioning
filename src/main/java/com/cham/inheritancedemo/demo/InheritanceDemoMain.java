@@ -27,13 +27,19 @@ public class InheritanceDemoMain {
         IrsTrade Irs1 = new IrsTrade("Irs-001", "Tom", "IRS", 1000);
         IrsTrade Irs2 = new IrsTrade("Irs-002", "Jack", "IRS", 2000);
 
+        FxTrade fx1 = new FxTrade("Fx-001", "Claire", "Open", 2);
+        FxTrade fx2 = new FxTrade("Fx-002", "Paul", "Closed", 1);
+
         tradeMap.set("T001",parentTrade1);
         tradeMap.set("T002",parentTrade2);
 
         tradeMap.set("Irs-001", Irs1);
         tradeMap.set("Irs-002", Irs2);
 
-        Collection<TradeParent> trades = tradeMap.values(new SqlPredicate( "traderName like J% OR tradeAmount > 1000"));
+        tradeMap.set("Fx-001", fx1);
+        tradeMap.set("Fx-002", fx2);
+
+        Collection<TradeParent> trades = tradeMap.values(new SqlPredicate( "traderName like J% OR tradeAmount > 1000 OR status like Open"));
 
         Iterator itr = trades.iterator();
         while (itr.hasNext()){
