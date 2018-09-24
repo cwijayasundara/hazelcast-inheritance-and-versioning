@@ -2,49 +2,68 @@ package com.cham.inheritancedemo.demo;
 
 import com.hazelcast.nio.serialization.PortableReader;
 import com.hazelcast.nio.serialization.PortableWriter;
-import com.hazelcast.nio.serialization.VersionedPortable;
 
 import java.io.IOException;
-import java.io.Serializable;
 
-public class IrsTrade extends TradeParent implements Serializable, VersionedPortable {
+public class IrsTrade implements TradeParent {
 
-    private String tradeName;
-    private int tradeAmount;
-    private static final int classVersionId=1;
+    private CommonAttributes commonAttributes;
+    private String counterParty;
+    private String notional;
+    private int margin;
+    private static final int classVersionId=4;
+
 
     @Override
     public String toString() {
         return "IrsTrade{" +
-                "tradeName='" + tradeName + '\'' +
-                ", tradeAmount=" + tradeAmount +
-                '}';
+                "commonAttributes=" + commonAttributes +
+                ", counterParty='" + counterParty + '\'' +
+                ", notional=" + notional +
+                ", margin=" + margin +
+                "} ";
     }
 
     public IrsTrade(){}
 
-    public IrsTrade(String tradeId, String traderName, String tradeName, int tradeAmount ){
-        super(tradeId,traderName);
-        this.tradeName = tradeName;
-        this.tradeAmount = tradeAmount;
+    public IrsTrade(CommonAttributes commonAttributes, String counterParty, String notional, int margin ){
+        this.commonAttributes = commonAttributes;
+        this.counterParty = counterParty;
+        this.notional = notional;
+        this.margin = margin;
     }
 
-    public String getTradeName() {
-        return tradeName;
+    public String getCounterParty() {
+        return counterParty;
     }
 
-    public void setTradeName(String tradeName) {
-        this.tradeName = tradeName;
+    public void setCounterParty(String counterParty) {
+        this.counterParty = counterParty;
     }
 
-    public int getTradeAmount() {
-        return tradeAmount;
+    public String getNotional() {
+        return notional;
     }
 
-    public void setTradeAmount(int tradeAmount) {
-        this.tradeAmount = tradeAmount;
+    public void setNotional(String notional) {
+        this.notional = notional;
     }
 
+    public int getMargin() {
+        return margin;
+    }
+
+    public void setMargin(int margin) {
+        this.margin = margin;
+    }
+
+    public CommonAttributes getCommonAttributes() {
+        return commonAttributes;
+    }
+
+    public void setCommonAttributes(CommonAttributes commonAttributes) {
+        this.commonAttributes = commonAttributes;
+    }
 
     @Override
     public int getClassId() {
@@ -63,16 +82,27 @@ public class IrsTrade extends TradeParent implements Serializable, VersionedPort
 
     @Override
     public void writePortable(PortableWriter writer) throws IOException {
-        System.out.println("Serialize IrsTrade");
-        writer.writeUTF("tradeName", tradeName);
-        writer.writeInt("tradeAmount", tradeAmount);
+        writer.writePortable("commonAttributes", commonAttributes);
+        writer.writeUTF("counterParty", counterParty);
+        writer.writeUTF("notional", notional);
+        writer.writeInt("margin", margin);
     }
 
     @Override
     public void readPortable(PortableReader reader) throws IOException {
-        System.out.println("Deserialize IrsTrade");
-        this.tradeName = reader.readUTF("tradeName");
-        this.tradeAmount = reader.readInt("tradeAmount");
+        this.commonAttributes = reader.readPortable("commonAttributes");
+        this.counterParty = reader.readUTF("counterParty");
+        this.notional = reader.readUTF("notional");
+        this.margin = reader.readInt("margin");
     }
 
+    @Override
+    public ProductType getProductType() {
+        return commonAttributes.getProductType();
+    }
+
+    @Override
+    public String getProductSubType() {
+        return commonAttributes.getProductSubType();
+    }
 }
