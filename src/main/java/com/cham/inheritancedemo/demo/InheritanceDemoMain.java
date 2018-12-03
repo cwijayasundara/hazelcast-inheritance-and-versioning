@@ -1,10 +1,19 @@
 package com.cham.inheritancedemo.demo;
 
+import com.cham.inheritancedemo.demo.fx.FxPortableFactoryImpl;
+import com.cham.inheritancedemo.demo.fx.FxProps;
+import com.cham.inheritancedemo.demo.fx.FxTrade;
+import com.cham.inheritancedemo.demo.irs.CommonAttributes;
+import com.cham.inheritancedemo.demo.irs.IRSProps;
+import com.cham.inheritancedemo.demo.irs.IrsPortableFactoryImpl;
+import com.cham.inheritancedemo.demo.irs.IrsTrade;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.SerializationConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
+
+import java.util.concurrent.TimeUnit;
 
 public class InheritanceDemoMain {
 
@@ -12,7 +21,8 @@ public class InheritanceDemoMain {
 
         ClientConfig clientConfig = new ClientConfig();
         SerializationConfig srzConfig = clientConfig.getSerializationConfig();
-        srzConfig.addPortableFactoryClass(1, "com.cham.inheritancedemo.demo.PortableFactoryImpl");
+        srzConfig.addPortableFactoryClass(IrsPortableFactoryImpl.FACTORY_ID, IrsPortableFactoryImpl.class);
+        srzConfig.addPortableFactoryClass(FxPortableFactoryImpl.FACTORY_ID, FxPortableFactoryImpl.class);
         HazelcastInstance client = HazelcastClient.newHazelcastClient(clientConfig);
 
         IMap<String, TradeParent> tradeMap = client.getMap("trade-map");
@@ -24,21 +34,27 @@ public class InheritanceDemoMain {
         CommonAttributes fx2Common = new CommonAttributes("Fx-002", "Tom", ProductType.FX, "fx2", "fx2 type trade", "345");
         CommonAttributes fx3Common = new CommonAttributes("Fx-003", "charlee", ProductType.FX, "fx3", "fx3 type trade","678");
 
-        TradeParent Irs1 = new IrsTrade(irs1Common,"Halifax", "4000000", 25000);
-        TradeParent Irs2 = new IrsTrade(irs2Common, "LBG","1000000" ,20000);
+        TradeParent Irs1 = new IrsTrade(irs1Common,"Halifax", "4000000", 1000, new IRSProps("irsStr", 5, 50.5, 500000l));
+        TradeParent Irs2 = new IrsTrade(irs2Common, "LBG","1000000" ,20000, new IRSProps("irsStr", 6, 60.5, 600000l));
 
-        TradeParent fx1 = new FxTrade(fx1Common, "Open", 500, "GBP");
-        TradeParent fx2 = new FxTrade(fx2Common, "Closed", 600, "USD");
-        TradeParent fx3 = new FxTrade(fx3Common, "test", 900, "EUR");
-
-        tradeMap.put(irs1Common.getTradeId(), Irs1);
-        tradeMap.put(irs2Common.getTradeId(), Irs2);
+        TradeParent fx1 = new FxTrade(fx1Common, "Open", 500, "GBP", new FxProps("str", 1, 10.50, 100000l));
+        TradeParent fx2 = new FxTrade(fx2Common, "Closed", 600, "USD",new FxProps("str", 2, 20.50,200000l));
+        TradeParent fx3 = new FxTrade(fx3Common, "test", 900, "EUR",new FxProps("str", 3, 30.50, 300000l));
 
         tradeMap.put(fx1Common.getTradeId(), fx1);
         tradeMap.put(fx2Common.getTradeId(), fx2);
         tradeMap.put(fx3Common.getTradeId(), fx3);
 
-        System.out.println("map data::"+ tradeMap.entrySet());
+        try {
+            TimeUnit.SECONDS.sleep(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        tradeMap.put(irs1Common.getTradeId(), Irs1);
+        tradeMap.put(irs2Common.getTradeId(), Irs2);
+
+        System.out.println("map data::"+ tradeMap.values());
 
 //        Collection<TradeParent> trades = tradeMap.values(new SqlPredicate( "commonAttributes.createdBy like T% or notional < 5000000"));
 //

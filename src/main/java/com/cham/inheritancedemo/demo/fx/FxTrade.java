@@ -1,16 +1,20 @@
-package com.cham.inheritancedemo.demo;
+package com.cham.inheritancedemo.demo.fx;
 
+import com.cham.inheritancedemo.demo.ProductType;
+import com.cham.inheritancedemo.demo.TradeParent;
+import com.cham.inheritancedemo.demo.irs.CommonAttributes;
 import com.hazelcast.nio.serialization.PortableReader;
 import com.hazelcast.nio.serialization.PortableWriter;
 
 import java.io.IOException;
 
-public class FxTrade implements TradeParent  {
+public class FxTrade implements TradeParent {
 
     private CommonAttributes commonAttributes;
     private String status;
     private int clientPrice;
     private String currency;
+    private FxProps fxProps;
 
     private static final int classVersionId = 6;
 
@@ -46,6 +50,14 @@ public class FxTrade implements TradeParent  {
         this.commonAttributes = commonAttributes;
     }
 
+    public FxProps getFxProps() {
+        return fxProps;
+    }
+
+    public void setFxProps(FxProps fxProps) {
+        this.fxProps = fxProps;
+    }
+
     @Override
     public String toString() {
         return "FxTrade{" +
@@ -53,31 +65,33 @@ public class FxTrade implements TradeParent  {
                 ", status='" + status + '\'' +
                 ", clientPrice=" + clientPrice +
                 ", currency=" + currency +
+                ", fxProps=" + fxProps +
                 "} " ;
     }
 
     public FxTrade(){}
 
-    public FxTrade(CommonAttributes commonAttributes, String status, int clientPrice, String currency ){
+    public FxTrade(CommonAttributes commonAttributes, String status, int clientPrice, String currency, FxProps fxProps ){
         this.commonAttributes = commonAttributes;
         this.status = status;
         this.clientPrice = clientPrice;
         this.currency = currency;
+        this.fxProps = fxProps;
     }
 
     @Override
     public int getClassId() {
-        return PortableFactoryImpl.FX_TRADE_CLASS_ID;
+        return FxPortableFactoryImpl.FX_TRADE_CLASS_ID;
     }
 
     @Override
     public int getFactoryId() {
-        return PortableFactoryImpl.FACTORY_ID;
+        return FxPortableFactoryImpl.FACTORY_ID;
     }
 
     @Override
     public int getClassVersion(){
-        return classVersionId;
+        return FxPortableFactoryImpl.CLASS_VERSION_ID;
     }
 
     @Override
@@ -86,6 +100,7 @@ public class FxTrade implements TradeParent  {
         writer.writeUTF("status", status);
         writer.writeInt("clientPrice", clientPrice);
         writer.writeUTF("currency", currency);
+        writer.writePortable("fxProps", fxProps);
     }
 
     @Override
@@ -94,6 +109,7 @@ public class FxTrade implements TradeParent  {
         this.status = reader.readUTF("status");
         this.clientPrice = reader.readInt("clientPrice");
         this.currency = reader.readUTF("currency");
+        this.fxProps = reader.readPortable("fxProps");
     }
 
     @Override

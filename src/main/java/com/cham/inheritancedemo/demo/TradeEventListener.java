@@ -1,5 +1,7 @@
 package com.cham.inheritancedemo.demo;
 
+import com.cham.inheritancedemo.demo.fx.FxTrade;
+import com.cham.inheritancedemo.demo.irs.IrsTrade;
 import com.hazelcast.core.EntryEvent;
 import com.hazelcast.map.listener.EntryAddedListener;
 import com.hazelcast.map.listener.EntryUpdatedListener;

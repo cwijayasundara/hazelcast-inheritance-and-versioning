@@ -1,5 +1,7 @@
 package com.cham.inheritancedemo.demo;
 
+import com.cham.inheritancedemo.demo.fx.FxPortableFactoryImpl;
+import com.cham.inheritancedemo.demo.irs.IrsPortableFactoryImpl;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.SerializationConfig;
@@ -14,7 +16,8 @@ public class QueryListener {
 
         ClientConfig clientConfig = new ClientConfig();
         SerializationConfig srzConfig = clientConfig.getSerializationConfig();
-        srzConfig.addPortableFactoryClass(1, "com.cham.inheritancedemo.demo.PortableFactoryImpl");
+        srzConfig.addPortableFactoryClass(IrsPortableFactoryImpl.FACTORY_ID, IrsPortableFactoryImpl.class);
+        srzConfig.addPortableFactoryClass(FxPortableFactoryImpl.FACTORY_ID, FxPortableFactoryImpl.class);
         HazelcastInstance client = HazelcastClient.newHazelcastClient(clientConfig);
 
         IMap<String, TradeParent> tradeMap = client.getMap("trade-map");

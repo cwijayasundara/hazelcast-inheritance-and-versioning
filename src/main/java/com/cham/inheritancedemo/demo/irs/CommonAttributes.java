@@ -1,5 +1,6 @@
-package com.cham.inheritancedemo.demo;
+package com.cham.inheritancedemo.demo.irs;
 
+import com.cham.inheritancedemo.demo.ProductType;
 import com.hazelcast.nio.serialization.PortableReader;
 import com.hazelcast.nio.serialization.PortableWriter;
 import com.hazelcast.nio.serialization.VersionedPortable;
@@ -92,17 +93,17 @@ public class CommonAttributes implements Serializable, VersionedPortable {
 
     @Override
     public int getClassId() {
-        return PortableFactoryImpl.TRADE_COMMON_ATTRIBUTES_CLASS_ID;
+        return IrsPortableFactoryImpl.IRS_COMMON_ATTRIBUTES_CLASS_ID;
     }
 
     @Override
     public int getFactoryId() {
-        return PortableFactoryImpl.FACTORY_ID;
+        return IrsPortableFactoryImpl.FACTORY_ID;
     }
 
     @Override
     public int getClassVersion(){
-        return classVersionId;
+        return IrsPortableFactoryImpl.CLASS_VERSION_ID;
     }
 
     @Override

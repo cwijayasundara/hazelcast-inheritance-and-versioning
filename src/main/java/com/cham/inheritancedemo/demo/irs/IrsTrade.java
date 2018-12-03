@@ -1,5 +1,6 @@
-package com.cham.inheritancedemo.demo;
+package com.cham.inheritancedemo.demo.irs;
 
+import com.cham.inheritancedemo.demo.*;
 import com.hazelcast.nio.serialization.PortableReader;
 import com.hazelcast.nio.serialization.PortableWriter;
 
@@ -11,6 +12,8 @@ public class IrsTrade implements TradeParent {
     private String counterParty;
     private String notional;
     private int margin;
+    private IRSProps irsProps;
+
     private static final int classVersionId=4;
 
 
@@ -21,16 +24,18 @@ public class IrsTrade implements TradeParent {
                 ", counterParty='" + counterParty + '\'' +
                 ", notional=" + notional +
                 ", margin=" + margin +
+                ", irsProps=" + irsProps +
                 "} ";
     }
 
     public IrsTrade(){}
 
-    public IrsTrade(CommonAttributes commonAttributes, String counterParty, String notional, int margin ){
+    public IrsTrade(CommonAttributes commonAttributes, String counterParty, String notional, int margin, IRSProps irsProps ){
         this.commonAttributes = commonAttributes;
         this.counterParty = counterParty;
         this.notional = notional;
         this.margin = margin;
+        this.irsProps = irsProps;
     }
 
     public String getCounterParty() {
@@ -65,19 +70,27 @@ public class IrsTrade implements TradeParent {
         this.commonAttributes = commonAttributes;
     }
 
+    public IRSProps getIrsProps() {
+        return irsProps;
+    }
+
+    public void setIrsProps(IRSProps irsProps) {
+        this.irsProps = irsProps;
+    }
+
     @Override
     public int getClassId() {
-        return PortableFactoryImpl.IRS_TRADE_CLASS_ID;
+        return IrsPortableFactoryImpl.IRS_TRADE_CLASS_ID;
     }
 
     @Override
     public int getFactoryId() {
-        return PortableFactoryImpl.FACTORY_ID;
+        return IrsPortableFactoryImpl.FACTORY_ID;
     }
 
     @Override
     public int getClassVersion(){
-        return classVersionId;
+        return IrsPortableFactoryImpl.CLASS_VERSION_ID;
     }
 
     @Override
@@ -85,7 +98,9 @@ public class IrsTrade implements TradeParent {
         writer.writePortable("commonAttributes", commonAttributes);
         writer.writeUTF("counterParty", counterParty);
         writer.writeUTF("notional", notional);
-        writer.writeInt("margin", margin);
+        if(margin > 0)
+            writer.writeInt("margin", margin);
+        writer.writePortable("irsProps",irsProps);
     }
 
     @Override
@@ -94,6 +109,7 @@ public class IrsTrade implements TradeParent {
         this.counterParty = reader.readUTF("counterParty");
         this.notional = reader.readUTF("notional");
         this.margin = reader.readInt("margin");
+        this.irsProps = reader.readPortable("irsProps");
     }
 
     @Override
